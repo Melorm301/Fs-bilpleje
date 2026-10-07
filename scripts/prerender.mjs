@@ -54,6 +54,8 @@ function splitHoistedLinks(markup) {
   return { hoisted: hoisted.join(""), rest };
 }
 
+const FALLBACK_PATTERN = /<!--app-fallback-->[\s\S]*?<!--\/app-fallback-->/;
+
 function headTags(meta, path) {
   const canonical = absoluteUrl(path);
   const image = absoluteUrl("/og-image.jpg");
@@ -97,7 +99,14 @@ for (const path of ssr.prerenderPaths) {
   const { hoisted, rest } = splitHoistedLinks(markup);
   const html = template
     .replace("<!--app-head-->", `${headTags(meta, path)}\n    ${hoisted}`)
-    .replace("<!--app-html-->", rest);
+    .replace("<!--app-html-->", rest)
+    .replace(FALLBACK_PATTERN, "");
+
+  if (html.includes("app-fallback")) {
+    throw new Error(
+      `Kildebeskeden i index.html blev ikke fjernet for ruten ${path}.`,
+    );
+  }
 
   const outFile =
     path === "/"

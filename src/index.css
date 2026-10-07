@@ -187,6 +187,22 @@ html.js [data-reveal][data-revealed="true"] {
   transform: none;
 }
 
+/*
+ * Sikkerhedsnet: hvis JavaScript-bundlen fejler, maa indholdet aldrig blive
+ * staaende usynligt. Denne animation viser alt efter nogle sekunder, uanset om
+ * observeren nåede at køre.
+ */
+html.js [data-reveal] {
+  animation: reveal-safety 0.4s ease 3s forwards;
+}
+
+@keyframes reveal-safety {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html.js [data-reveal] {
     opacity: 1;

@@ -19,7 +19,28 @@
     <!--app-head-->
   </head>
   <body>
-    <div id="root"><!--app-html--></div>
+    <div id="root"><!--app-html--><!--app-fallback-->
+      <div
+        id="app-fallback"
+        style="max-width:36rem;margin:12vh auto 0;padding:0 1.5rem;font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:#111"
+      >
+        <p style="font-size:.75rem;font-weight:700;text-transform:uppercase;color:#8b9199;margin:0">
+          FS Bilpleje &amp; Service
+        </p>
+        <h1 style="font-size:1.75rem;line-height:1.2;margin:.75rem 0 0">
+          Hjemmesiden er ikke bygget endnu
+        </h1>
+        <p style="font-size:1rem;line-height:1.6;color:#55565a;margin:1rem 0 0">
+          Denne fil er kildekoden til hjemmesiden og kan ikke åbnes direkte i
+          browseren. Byg projektet og åbn den færdige version i stedet.
+        </p>
+        <pre
+          style="background:#f5f5f5;border:1px solid #e5e5e5;padding:.9rem 1rem;font-size:.85rem;overflow-x:auto;margin:1.25rem 0 0"
+        >npm install
+npm run build
+npm run preview</pre>
+      </div>
+    <!--/app-fallback--></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -134,6 +134,12 @@ Er repositoryet allerede tilføjet, skal mappen blot være den samme - så dukke
 
 Fanen **Actions** på GitHub viser status for hver publicering.
 
+> **Vigtigt:** Kilden skal stå på **GitHub Actions**. Står den på
+> **Deploy from a branch**, publicerer GitHub rå kildekode fra repoet, og så
+> viser siden en hvid skærm, fordi `index.html` i roden er Vite-kildekode og
+> ikke den færdige hjemmeside. Workflowet forsøger selv at slå det rigtige
+> setup til, men indstillingen kan også sættes manuelt som beskrevet ovenfor.
+
 ### Eget domæne senere
 
 Sæt miljøvariablen `VITE_BASE_PATH=/` i workflowet (eller i en `.env`-fil
@@ -163,6 +169,23 @@ Følgende skal leveres af indehaveren, før hjemmesiden offentliggøres:
 6. Rigtige billeder af virksomheden og af udførte opgaver
 7. Eventuelle sociale profiler
 8. Gennemlæsning af privatlivspolitik og virksomhedsoplysninger
+
+## Hvis siden viser en hvid skærm
+
+En hvid skærm betyder næsten altid, at der vises kildekode i stedet for det
+byggede site. Tjek i denne rækkefølge:
+
+1. **GitHub Pages-kilden.** Under **Settings → Pages** skal **Source** være
+   **GitHub Actions**. Vælges **Deploy from a branch**, udgives repoets
+   `index.html`, som er Vite-kildekode med en tom `#root`.
+2. **Åbn ikke `index.html` direkte fra mappen.** Filen er et byggetrin, ikke en
+   færdig side. Kør `npm run dev` eller `npm run build && npm run preview`.
+3. **Se fanen Actions på GitHub.** Bliver trinnet "Konfigurer Pages" rødt, er
+   Pages ikke sat op til GitHub Actions endnu.
+
+Af samme grund viser kildekodens `index.html` nu en forklarende besked i stedet
+for en tom side, og scroll-animationerne har et CSS-sikkerhedsnet, så indholdet
+altid bliver synligt, selv hvis JavaScript fejler.
 
 ## Licens og kilder
 

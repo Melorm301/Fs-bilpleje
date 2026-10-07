@@ -11,6 +11,9 @@ if (!container) {
   throw new Error("Rod-elementet #root blev ikke fundet.");
 }
 
+// Fjern beskeden fra index.html, som kun vises, hvis siden åbnes som kildekode.
+container.querySelector("#app-fallback")?.remove();
+
 const basename = basePath.replace(/\/$/, "");
 
 const tree = (

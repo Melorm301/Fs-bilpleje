@@ -1,6 +1,5 @@
 import { ArrowRight, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Reveal } from "../components/Reveal";
 import { business, hasValidPhone, phoneHref } from "../config/business";
 import { asset } from "../lib/asset";
 
@@ -30,7 +29,8 @@ export function Hero() {
       />
 
       <div className="shell relative flex min-h-[84vh] flex-col justify-center py-24 md:min-h-[88vh] md:py-32">
-        <Reveal className="max-w-xl">
+        {/* Heroen vises altid med det samme og er ikke afhængig af JavaScript. */}
+        <div className="max-w-xl">
           <p className="eyebrow text-silver">Bilpleje · Bilklargøring · Polering</p>
           <h1 className="mt-5 text-4xl leading-[1.04] text-white sm:text-5xl lg:text-6xl">
             {business.name}
@@ -62,7 +62,7 @@ export function Hero() {
               Ring til os
             </a>
           ) : null}
-        </Reveal>
+        </div>
       </div>
     </section>
   );
