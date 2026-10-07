@@ -9,7 +9,6 @@ permissions:
   contents: read
   pages: write
   id-token: write
-  administration: write
 
 concurrency:
   group: pages
@@ -44,10 +43,6 @@ jobs:
 
       - name: Konfigurer Pages
         uses: actions/configure-pages@v5
-        with:
-          # Slår GitHub Pages til og sætter kilden til GitHub Actions, så
-          # workflowet ikke fejler på et repository uden opsat Pages.
-          enablement: true
 
       - name: Upload build
         uses: actions/upload-pages-artifact@v3
