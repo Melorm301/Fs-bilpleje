@@ -21,7 +21,7 @@ npm run dev     # start udviklingsserver
 ```
 
 Udviklingsserveren bruger samme base-path som produktion, så siden ligger på
-`http://localhost:5173/fs-bilpleje/`.
+`http://localhost:5173/Fs-bilpleje/`.
 
 ## Kommandoer
 
@@ -130,7 +130,12 @@ Er repositoryet allerede tilføjet, skal mappen blot være den samme - så dukke
 4. Workflowet `.github/workflows/deploy.yml` bygger og publicerer automatisk
    hjemmesiden ved hvert push til `main`.
 5. Hjemmesiden ligger herefter på
-   `https://<brugernavn>.github.io/fs-bilpleje/`.
+   `https://<brugernavn>.github.io/Fs-bilpleje/`.
+
+> Repositoryet hedder **Fs-bilpleje** med stort F og B, og GitHub Pages er
+> case-sensitiv i stien. Base-stien i `vite.config.ts` skal derfor være
+> `/Fs-bilpleje/` — med en anden skrivemåde giver CSS, JavaScript og billeder
+> 404, og siden vises uden styling.
 
 Fanen **Actions** på GitHub viser status for hver publicering.
 
@@ -178,9 +183,13 @@ byggede site. Tjek i denne rækkefølge:
 1. **GitHub Pages-kilden.** Under **Settings → Pages** skal **Source** være
    **GitHub Actions**. Vælges **Deploy from a branch**, udgives repoets
    `index.html`, som er Vite-kildekode med en tom `#root`.
-2. **Åbn ikke `index.html` direkte fra mappen.** Filen er et byggetrin, ikke en
+2. **Base-stien.** Siden vises uden CSS og uden billeder, hvis base-stien i
+   `vite.config.ts` ikke matcher repository-navnet præcist. Repositoryet hedder
+   `Fs-bilpleje`, så base-stien skal være `/Fs-bilpleje/`. GitHub Pages er
+   case-sensitiv i stien.
+3. **Åbn ikke `index.html` direkte fra mappen.** Filen er et byggetrin, ikke en
    færdig side. Kør `npm run dev` eller `npm run build && npm run preview`.
-3. **Se fanen Actions på GitHub.** Bliver trinnet "Konfigurer Pages" rødt, er
+4. **Se fanen Actions på GitHub.** Bliver trinnet "Konfigurer Pages" rødt, er
    Pages ikke sat op til GitHub Actions endnu.
 
 Af samme grund viser kildekodens `index.html` nu en forklarende besked i stedet

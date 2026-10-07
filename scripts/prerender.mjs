@@ -9,12 +9,22 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const rootDir = join(dirname(fileURLToPath(import.meta.url)), "..");
 const distDir = join(rootDir, "dist");
 
-const rawBase = process.env.VITE_BASE_PATH ?? "/fs-bilpleje/";
+const template = await readFile(join(distDir, "index.html"), "utf8");
+
+/**
+ * Udledder base-stien fra det byggede index.html, så den altid matcher
+ * vite.config.ts. GitHub Pages er case-sensitiv i stien, så et afvigende
+ * bogstav betyder at al CSS, JavaScript og alle billeder giver 404.
+ */
+function detectBase(html) {
+  const match = html.match(/(?:src|href)="([^"]*?)\/assets\//);
+  if (!match) return null;
+  const prefix = match[1].replace(/\/+$/, "");
+  return `${prefix}/`;
+}
+
+const rawBase = process.env.VITE_BASE_PATH ?? detectBase(template) ?? "/Fs-bilpleje/";
 const basePath = rawBase.endsWith("/") ? rawBase : `${rawBase}/`;
-const siteUrl = (process.env.VITE_SITE_URL ?? "https://ditbrugernavn.github.io").replace(
-  /\/+$/,
-  "",
-);
 const siteName = "FS Bilpleje & Service";
 
 const escapeHtml = (value) =>
@@ -27,9 +37,19 @@ const escapeHtml = (value) =>
 function absoluteUrl(path) {
   const cleanBase = basePath.replace(/^\/+|\/+$/g, "");
   const clean = path.replace(/^\/+/, "");
-  const parts = [siteUrl, cleanBase, clean].filter(Boolean);
+  const parts = [siteOrigin(), cleanBase, clean].filter(Boolean);
   const url = parts.join("/");
   return clean ? url : `${url}/`;
+}
+
+/**
+ * Domænet hentes fra den byggede konfiguration, så canonical-URL'er og
+ * sitemap altid matcher appen (og ikke kan afvige i f.eks. store bogstaver).
+ */
+function siteOrigin() {
+  const fallback = "https://ditbrugernavn.github.io";
+  const value = ssr?.site?.url ?? process.env.VITE_SITE_URL ?? fallback;
+  return String(value).replace(/\/+$/, "");
 }
 
 function withBase(path) {
@@ -89,9 +109,10 @@ function headTags(meta, path) {
   return tags.join("\n    ");
 }
 
-const template = await readFile(join(distDir, "index.html"), "utf8");
 const ssrDir = join(rootDir, ".ssr");
 const ssr = await import(pathToFileURL(join(ssrDir, "entry-server.js")).href);
+
+console.log(`base-sti: ${basePath}`);
 
 for (const path of ssr.prerenderPaths) {
   const markup = ssr.render(withBase(path));
@@ -105,6 +126,22 @@ for (const path of ssr.prerenderPaths) {
   if (html.includes("app-fallback")) {
     throw new Error(
       `Kildebeskeden i index.html blev ikke fjernet for ruten ${path}.`,
+    );
+  }
+
+  // Alle absolute stier skal ligge under base-stien. Ellers giver CSS,
+  // JavaScript og billeder 404 på GitHub Pages.
+  const basePrefix = basePath.replace(/\/$/, "");
+  const wrongRefs = [
+    ...new Set(
+      [...html.matchAll(/(?:src|href)="(\/[^"]*)"/g)]
+        .map((match) => match[1])
+        .filter((ref) => ref !== basePrefix && !ref.startsWith(basePath)),
+    ),
+  ];
+  if (wrongRefs.length > 0) {
+    throw new Error(
+      `Forkert base-sti for ruten ${path}: ${wrongRefs.join(", ")}`,
     );
   }
 

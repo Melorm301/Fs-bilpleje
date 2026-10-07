@@ -4,10 +4,12 @@ import { defineConfig } from "vite";
 
 /**
  * Base-stien styrer, hvor hjemmesiden kan ligge.
- * På GitHub Pages er det typisk "/fs-bilpleje/". Sæt VITE_BASE_PATH=/ når
- * hjemmesiden flyttes til et eget domæne i roden.
+ *
+ * GitHub Pages er case-sensitiv i stien, så den skal matche repository-navnet
+ * præcist: repositoryet hedder "Fs-bilpleje", derfor "/Fs-bilpleje/".
+ * Sæt VITE_BASE_PATH=/ når hjemmesiden flyttes til et eget domæne i roden.
  */
-const base = process.env.VITE_BASE_PATH ?? "/fs-bilpleje/";
+const base = process.env.VITE_BASE_PATH ?? "/Fs-bilpleje/";
 
 export default defineConfig({
   base,

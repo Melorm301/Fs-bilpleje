@@ -5,12 +5,20 @@
  * hvis siden senere flyttes væk fra GitHub Pages.
  */
 
+const rawSiteUrl = import.meta.env.VITE_SITE_URL ?? "https://ditbrugernavn.github.io";
+
+// Værtsnavne er case-insensitive, så canonical-URL'er skrives med små bogstaver.
+const siteUrl = rawSiteUrl.replace(
+  /^(https?:\/\/)([^/]+)/i,
+  (_match: string, scheme: string, host: string) => `${scheme}${host.toLowerCase()}`,
+);
+
 export const site = {
   /**
    * Domæne uden afsluttende skråstreg. Kan overskrives ved build med
    * VITE_SITE_URL, fx i GitHub Actions.
    */
-  url: import.meta.env.VITE_SITE_URL ?? "https://ditbrugernavn.github.io",
+  url: siteUrl,
   repo: "fs-bilpleje",
   locale: "da_DK",
   language: "da",
